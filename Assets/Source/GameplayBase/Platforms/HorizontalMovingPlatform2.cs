@@ -14,14 +14,11 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 	public bool 	startGoingLeft;
 	private bool 	isGoingLeft;
 
-	private Rigidbody2D myRigidBody;
-	public 	Rigidbody2D player;
+	public 	GameObject 	player;
 	public	float 		increment;
 
 	void Awake(){
-
-		myRigidBody = GetComponent<Rigidbody2D> ();
-	
+		
 		if (startGoingLeft) {
 
 			isGoingLeft = true;
@@ -53,15 +50,6 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 		NeedChangeDirection ();
 	}
 
-	void FixedUpdate(){
-
-		if(player != null){
-
-			//player.MovePosition (new Vector2(player.transform.position.x + platformDisplacement.x, player.transform.position.y + platformDisplacement.y));
-			player.transform.Translate(platformDisplacement * increment * Time.fixedDeltaTime);
-		}
-	}
-
 	private void NeedChangeDirection(){
 
 		if (isGoingLeft) {
@@ -82,13 +70,19 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other){
 
-		Debug.Log ("Other:" + other.transform.name);
-		player = other.gameObject.GetComponent<Rigidbody2D> ();
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			player = other.gameObject;
+			player.transform.SetParent (this.transform);
+		}
 	}
 
 	void OnCollisionExit2D(Collision2D other){
 
-		Debug.Log ("Other:" + other.transform.name);
-		player = null;
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			player.transform.SetParent (null);
+			player = null;
+		}
 	}
 }
