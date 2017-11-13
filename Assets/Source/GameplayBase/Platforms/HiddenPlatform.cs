@@ -7,27 +7,35 @@ using UnityEngine;
 /// </summary>
 public class HiddenPlatform : MonoBehaviour {
 
-	public int 		maxNumOfTouches;
-	public float	timeToHide;
-	public bool 	canReturn;
-	public float	timeToReturn;
+	public int 		maxNumOfTouches;		//Los numeros de toques que tiene disponble antes de ocultarse
+	public float	timeToHide;				//Tiempo desde que se pisa hasta que se oculta
+	public bool 	canReturn;				//Puede volver a colocarse?
+	public float	timeToReturn;			//Tiempo que tiene que pasar hasta que vuelva a colocarse
 
-	private int 	currentTouches;
-	private bool	hidingPlatform;
-	private SpriteRenderer	mySpriteRenderer;
-	private BoxCollider2D	myBoxCollider2D;
+	private int 	currentTouches;			//El numero de toques que esstan acumulados
+	private bool	hidingPlatform;			//Se está ocultando la plataforma
+	private SpriteRenderer	mySpriteRenderer;	//Sprite renderer
+	private BoxCollider2D	myBoxCollider2D;	//Collider 2d
 
 	void Awake(){
 
+		//Cacheamos componentes
 		mySpriteRenderer = GetComponent<SpriteRenderer> ();
 		myBoxCollider2D = GetComponent<BoxCollider2D> ();
 	}
 
 	void OnCollisionEnter2D(Collision2D other){
 
+		//Si colisiona el player con la plataforma
 		if(other.gameObject.tag.ToString() == "Player"){
 
-			AddTouch ();
+			Transform collisionTransform = other.transform;
+
+			//Si el que le toca le toca por encima
+			if(collisionTransform.position.y >= this.transform.position.y){
+
+				AddTouch ();
+			}
 		}
 	}
 
