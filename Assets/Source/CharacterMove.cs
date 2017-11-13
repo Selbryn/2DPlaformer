@@ -10,7 +10,7 @@ public class CharacterMove : MonoBehaviour {
 
 	//Movimiento con notificaciones
 	[Space (20.0f)]
-	private Vector2 	movementVector;
+	private Vector2 movementVector;
 
 	[Header ("Friction")]
 	public bool		hasAirInstantStop;			//Se va a parar el movimiento instantaneamente cuando dejemos de movernos en el aire?

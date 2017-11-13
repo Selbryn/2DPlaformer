@@ -14,12 +14,11 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 	public bool 	startGoingLeft;
 	private bool 	isGoingLeft;
 
-	private Rigidbody2D myRigidBody;
+	public 	GameObject 	player;
+	public	float 		increment;
 
 	void Awake(){
-
-		myRigidBody = GetComponent<Rigidbody2D> ();
-	
+		
 		if (startGoingLeft) {
 
 			isGoingLeft = true;
@@ -35,16 +34,16 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 			
 	}
 
-	void FixedUpdate () {
+	void Update () {
 
-		platformDisplacement = Vector2.zero;
+		//platformDisplacement = Vector2.zero;
 		if (isGoingLeft) {
 
-			platformDisplacement = new Vector2 (-speed * Time.fixedDeltaTime, 0.0f);
+			platformDisplacement = new Vector2 (-speed * Time.deltaTime, 0.0f);
 
 		} else {
 
-			platformDisplacement = new Vector2 (speed * Time.fixedDeltaTime, 0.0f);
+			platformDisplacement = new Vector2 (speed * Time.deltaTime, 0.0f);
 		}
 			
 		transform.Translate(platformDisplacement);
@@ -66,6 +65,24 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 
 				isGoingLeft = true;
 			}
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D other){
+
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			player = other.gameObject;
+			player.transform.SetParent (this.transform);
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D other){
+
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			player.transform.SetParent (null);
+			player = null;
 		}
 	}
 }
