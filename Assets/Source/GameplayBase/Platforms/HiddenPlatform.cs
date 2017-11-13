@@ -10,6 +10,7 @@ public class HiddenPlatform : MonoBehaviour {
 	public int 		maxNumOfTouches;
 	public float	timeToHide;
 	public bool 	canReturn;
+	public float	timeToReturn;
 
 	private int 	currentTouches;
 	private bool	hidingPlatform;
@@ -60,5 +61,20 @@ public class HiddenPlatform : MonoBehaviour {
 		mySpriteRenderer.enabled = false;
 		myBoxCollider2D.enabled = false;
 
+		if(canReturn){
+
+			StartCoroutine (EnablePlatform());
+		}
 	}
+
+	private IEnumerator EnablePlatform(){
+
+		yield return new WaitForSeconds (timeToReturn);
+
+		hidingPlatform = false;
+		mySpriteRenderer.enabled = true;
+		myBoxCollider2D.enabled = true;
+
+	}
+
 }
