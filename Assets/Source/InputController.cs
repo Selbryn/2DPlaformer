@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Input controller.
+/// </summary>
 public class InputController : MonoBehaviour {
 
 	public Vector3Notification 	OnInputDone; 			//Notificacion de input de movimiento recibido
@@ -9,14 +12,14 @@ public class InputController : MonoBehaviour {
 	public Notification 		OnJumpPressed;			//Notificacion de salto
 	public Notification 		OnReturnToGround;		//Notificacion de volver al suelo
 
-	public KeyCode 				jumpKey;
-	public KeyCode 				returnToGround;
+	public KeyCode 				moveRightKey;			//Tecla para moverse a la derecha
+	public KeyCode 				moveLeftKey;			//Tecla para moverse a la izquierda
+	public KeyCode 				jumpKey;				//Tecla para saltar
 
-	private bool 				isRightArrowPressed;
-	private bool 				isLeftArrowPressed;
+	private bool 				isRightArrowPressed;	//Esta apretada la tecla derecha?
+	private bool 				isLeftArrowPressed;		//Esta apretada la tecla izquierda?
 
 	void Awake () {
-
 
 		OnInputDone 	= new Vector3Notification (NotificationTypes.oninputdone, Vector3.zero);
 		OnInputFinished = new Notification (NotificationTypes.oninputfinished);
@@ -28,19 +31,27 @@ public class InputController : MonoBehaviour {
 	void Update () {
 
 		//Apretamos la tecla izquierda
-		if( (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && !isRightArrowPressed) {
+		if( (Input.GetKeyDown(moveLeftKey))) {
 
-			OnInputDone.varVector3 = Vector3.left;
-			NotificationCenter.defaultCenter.postNotification (OnInputDone);
 			isLeftArrowPressed = true;
+
+			if(!isRightArrowPressed){
+
+				OnInputDone.varVector3 = Vector3.left;
+				NotificationCenter.defaultCenter.postNotification (OnInputDone);
+			}
 		}
 
 		//Apretamos la tecla derecha
-		if( (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && !isLeftArrowPressed){
+		if( (Input.GetKeyDown(moveRightKey))){
 
-			OnInputDone.varVector3 = Vector3.right;
-			NotificationCenter.defaultCenter.postNotification (OnInputDone);
 			isRightArrowPressed = true;
+
+			if(!isLeftArrowPressed){
+
+				OnInputDone.varVector3 = Vector3.right;
+				NotificationCenter.defaultCenter.postNotification (OnInputDone);
+			}
 		}
 
 		//Apretamos tecla del salto
@@ -49,23 +60,29 @@ public class InputController : MonoBehaviour {
 			NotificationCenter.defaultCenter.postNotification (OnJumpPressed);
 		}
 
-		//Apretamos tecla de bajar rapido al suelo
-		if (Input.GetKeyDown (returnToGround)) {
-
-			NotificationCenter.defaultCenter.postNotification (OnReturnToGround);
-		}
-
-		//Soltamos la tecla
+		//Soltamos alguna tecla de movimiento
 		if( (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow)) && isLeftArrowPressed){
 
 			NotificationCenter.defaultCenter.postNotification (OnInputFinished);
 			isLeftArrowPressed = false;
+
+			if(isRightArrowPressed){
+
+				OnInputDone.varVector3 = Vector3.right;
+				NotificationCenter.defaultCenter.postNotification (OnInputDone);
+			}
 		}
 
 		if( (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow)) && isRightArrowPressed){
 
 			NotificationCenter.defaultCenter.postNotification (OnInputFinished);
 			isRightArrowPressed = false;
+
+			if(isLeftArrowPressed){
+
+				OnInputDone.varVector3 = Vector3.left;
+				NotificationCenter.defaultCenter.postNotification (OnInputDone);
+			}
 		}
 
 	}

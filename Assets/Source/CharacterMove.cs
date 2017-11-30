@@ -5,12 +5,15 @@ using UnityEngine;
 public class CharacterMove : MonoBehaviour {
 
 	[Header ("Movement")]
-	public float	speedIncrese;				//Incremento de velocidad al caminar
-	public float 	maxSpeed;					//Velocidad maxima que puede alcanzar caminando
+	public float	groundSpeedIncrese;			//Incremento de velocidad al caminar
+	public float	airSpeedIncrease;			//Incremento de velocidad al moverse en el aire
+	public float	maxAirSpeed;				//Velocidad maxima en el aire
+	public float 	maxGroundSpeed;				//Velocidad maxima en el suelo
+	public float 	currentSpeedIncrease;		//Incremento de velocidad actual
 
 	//Movimiento con notificaciones
 	[Space (20.0f)]
-	private Vector2 movementVector;
+	public Vector2 movementVector;
 
 	[Header ("Friction")]
 	public bool		hasAirInstantStop;			//Se va a parar el movimiento instantaneamente cuando dejemos de movernos en el aire?
@@ -23,7 +26,6 @@ public class CharacterMove : MonoBehaviour {
 	public int		totalJumps;					//El numero de saltos totales que se pueden hacer antes de tocar el suelo
 	public float 	timeBetweenJumps;			//El tiempo minimo entre saltos
 	public float	lastJumpTime;				//El tiempo en el que realizo el ultimo salto
-	public bool		canJumpFromFall;			//Puede saltar si se deja caer desde una plataforma?
 	public int		currentJumps;				//El numero se saltos que lleva dados el pj antes de tocar el suelo
 	public bool		needJump;					//Se necesita hacer un salto? se marca true cuando se recibe el input
 	public bool 	isJumping;					//Esta saltando??
@@ -42,7 +44,6 @@ public class CharacterMove : MonoBehaviour {
 		NotificationCenter.defaultCenter.addListener (OnInputDone, NotificationTypes.oninputdone);
 		NotificationCenter.defaultCenter.addListener (OnInputFinished, NotificationTypes.oninputfinished);
 		NotificationCenter.defaultCenter.addListener (OnJumpPressed, NotificationTypes.onjumppressed);
-		NotificationCenter.defaultCenter.addListener (OnReturnToGround, NotificationTypes.onreturntoground);
 	}
 		
 	public void OnInputDone(Notification note){
@@ -63,17 +64,9 @@ public class CharacterMove : MonoBehaviour {
 		needJump = true;
 	}
 
-
-	public void OnReturnToGround(Notification note){
-
-
-	}
-
 	void FixedUpdate () {
 
 		Move ();
-		//LimitSpeed (); //FIXEAR, que el jugador no pueda pasar de la velocidad maxima
-
 		GoingUpOrDown ();
 		IsCharacterGrounded ();
 		Jump ();
@@ -126,41 +119,45 @@ public class CharacterMove : MonoBehaviour {
 	/// </summary>
 	private void Move(){
 
+		//Si el personaje esta en el suelo le damos una velocidad y si está en el aire otra
+		if (isGrounded) {
+
+			currentSpeedIncrease = groundSpeedIncrese;
+		} else {
+
+			currentSpeedIncrease = airSpeedIncrease;
+		}
+
+		Debug.Log (myRigidbody.velocity.x);
+
+		//Si hacemos un cambio de sentido, nos estabamos moviendo hacia la 
+//		if(movementVector == Vector2.left && myRigidbody.velocity.x > 0.0f){
+//
+//			myRigidbody.velocity = new Vector2(0.0f, myRigidbody.velocity.y);
+//
+//		} else if(movementVector == Vector2.right && myRigidbody.velocity.x < 0.0f){
+//			
+//			myRigidbody.velocity = new Vector2(0.0f, myRigidbody.velocity.y);
+//		}
+
+		//Debug.Log (movementVector + " . " + myRigidbody.velocity.x);
+
 		//Movemos el pj
 		if(movementVector == Vector2.left){
 
-			myRigidbody.AddForce (movementVector * speedIncrese);
+			myRigidbody.AddForce (movementVector * currentSpeedIncrease);
 
 			//Limitamos la velocidad si la superamos
-			myRigidbody.velocity = new Vector2 (Mathf.Clamp(0.0f, myRigidbody.velocity.x, -maxSpeed), myRigidbody.velocity.y);
+			myRigidbody.velocity = new Vector2 (Mathf.Clamp(myRigidbody.velocity.x, -maxGroundSpeed, 0.0f), myRigidbody.velocity.y);
 
 		} else if(movementVector == Vector2.right){
 
-			myRigidbody.AddForce (movementVector * speedIncrese);
+			myRigidbody.AddForce (movementVector * currentSpeedIncrease);
 
 			//Limitamos la velocidad si la superamos
-			myRigidbody.velocity = new Vector2 (Mathf.Clamp(myRigidbody.velocity.x, 0.0f, maxSpeed), myRigidbody.velocity.y);
+			myRigidbody.velocity = new Vector2 (Mathf.Clamp(myRigidbody.velocity.x, 0.0f, maxGroundSpeed), myRigidbody.velocity.y);
 		}
 			
-	}
-
-	/// <summary>
-	/// Limitamos la velocidad.
-	/// </summary>
-	private void LimitSpeed(){
-
-
-		if( Mathf.Abs(myRigidbody.velocity.x) >= maxSpeed){
-
-			if (myRigidbody.velocity.x > 0.0) {
-
-				myRigidbody.velocity = new Vector2(maxSpeed, myRigidbody.velocity.y) ;
-			} else {
-
-				myRigidbody.velocity = new Vector2(-maxSpeed, myRigidbody.velocity.y) ;
-			}
-		}
-
 	}
 
 	/// <summary>
@@ -170,16 +167,6 @@ public class CharacterMove : MonoBehaviour {
 
 		//Si se necesita realizar salto y puede realizar al menos 1
 		if(needJump && totalJumps > 0){
-			 
-			//Si no puede saltar desde la caida no le dejamos que salte...
-//			if(!canJumpFromFall){
-//
-//				if(isGoingDown && !isJumping){
-//
-//					needJump = false;
-//					return;
-//				}
-//			}
 
 			//Primer salto
 			if (!isJumping && isGrounded) {
@@ -287,7 +274,7 @@ public class CharacterMove : MonoBehaviour {
 		while (Mathf.Abs(myRigidbody.velocity.x) > 0.0f) {
 
 			//https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
-			float normalizedVelocity = (Mathf.Abs(myRigidbody.velocity.x) - 0.0f)/(maxSpeed - 0.0f);
+			float normalizedVelocity = (Mathf.Abs(myRigidbody.velocity.x) - 0.0f)/(maxGroundSpeed - 0.0f);
 
 			if(isMovingRight){
 
