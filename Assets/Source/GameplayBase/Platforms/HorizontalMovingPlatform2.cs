@@ -72,8 +72,14 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 
 		if(other.gameObject.tag.ToString() == "Player"){
 
-			player = other.gameObject;
-			player.transform.SetParent (this.transform);
+			Transform collisionTransform = other.transform;
+
+			//Si el que le toca le toca por encima
+			if(collisionTransform.position.y >= this.transform.position.y){
+
+				player = other.gameObject;
+				player.transform.SetParent (this.transform);
+			}
 		}
 	}
 
@@ -81,8 +87,11 @@ public class HorizontalMovingPlatform2 : MonoBehaviour {
 
 		if(other.gameObject.tag.ToString() == "Player"){
 
-			player.transform.SetParent (null);
-			player = null;
+			if(player != null){
+
+				player.transform.SetParent (null);
+				player = null;
+			}
 		}
 	}
 }
