@@ -46,7 +46,6 @@ public class GunEngine : MonoBehaviour {
 
 		if(Input.GetMouseButtonDown(0)){
 
-			Debug.Log("...");
 			UseCharge (1);
 		}
 	}
@@ -60,9 +59,9 @@ public class GunEngine : MonoBehaviour {
 
 		if(currentNumOfCharges >= numOfCharges){
 
+			Debug.Log("Shot");
 			currentNumOfCharges -= numOfCharges;
 			isFullCharged = false;
-			//Debug.Break ();
 		}
 
 	}

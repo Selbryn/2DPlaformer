@@ -87,7 +87,7 @@ public class InputController : MonoBehaviour {
 
 		if((Input.GetKeyDown(KeyCode.Q))){
 
-			Debug.Log ("SHOOT");
+			//Debug.Log ("SHOOT");
 		}
 
 	}
