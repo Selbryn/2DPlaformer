@@ -128,7 +128,7 @@ public class CharacterMove : MonoBehaviour {
 			currentSpeedIncrease = airSpeedIncrease;
 		}
 
-		Debug.Log (myRigidbody.velocity.x);
+		//Debug.Log (myRigidbody.velocity.x);
 
 		//Si hacemos un cambio de sentido, nos estabamos moviendo hacia la 
 //		if(movementVector == Vector2.left && myRigidbody.velocity.x > 0.0f){
