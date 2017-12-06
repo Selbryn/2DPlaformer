@@ -6,17 +6,17 @@ public class VerticalMovingPlatform : MonoBehaviour {
 
 	public float	speed;
 	public float	distanceToMove;
+	public Vector2 	platformDisplacement;
+
 	public float	endPoint;
 	public float	initPoint;
 
 	public bool 	startGoingDown;
 	public bool 	isGoingDown;
 
-	private Rigidbody2D myRigidBody;
+	public 	GameObject 	player;
 
 	void Awake(){
-
-		myRigidBody = GetComponent<Rigidbody2D> ();
 	
 		if (startGoingDown) {
 
@@ -27,25 +27,24 @@ public class VerticalMovingPlatform : MonoBehaviour {
 
 			isGoingDown = false;
 
-			initPoint = initPoint + distanceToMove;
 			endPoint = transform.position.y;
+			initPoint = endPoint + distanceToMove;
 		}
 			
 	}
 
-	void FixedUpdate () {
+	void Update () {
 
-		Vector2 newPosition = Vector2.zero;
 		if (isGoingDown) {
 
-			newPosition = new Vector2 (transform.position.x, transform.position.y - speed * Time.fixedDeltaTime);
+			platformDisplacement = new Vector2 (0.0f,- speed * Time.deltaTime);
 
 		} else {
 
-			newPosition = new Vector2 (transform.position.x, transform.position.y + speed * Time.fixedDeltaTime);
+			platformDisplacement = new Vector2 (0.0f,+ speed * Time.deltaTime);
 		}
 
-		myRigidBody.MovePosition (newPosition);
+		transform.Translate (platformDisplacement);
 		NeedChangeDirection ();
 
 	}
@@ -64,6 +63,44 @@ public class VerticalMovingPlatform : MonoBehaviour {
 			if(transform.position.y >= initPoint){
 
 				isGoingDown = true;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Cuando algo colisiona contra la plataforma.
+	/// </summary>
+	void OnCollisionEnter2D(Collision2D other){
+
+		//Si es el jugador
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			Transform collisionTransform = other.transform;
+
+			//Si el que le toca le toca por encima
+			if(collisionTransform.position.y >= this.transform.position.y){
+
+				//Lo añadimos como hijo y lo trackeamos
+				player = other.gameObject;
+				player.transform.SetParent (this.transform);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Cuando la colision se pierde
+	/// </summary>
+	/// <param name="other">Other.</param>
+	void OnCollisionExit2D(Collision2D other){
+
+		//Si es el jugador
+		if(other.gameObject.tag.ToString() == "Player"){
+
+			//Lo sacamos de los hijos
+			if(player != null){
+
+				player.transform.SetParent (null);
+				player = null;
 			}
 		}
 	}

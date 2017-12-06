@@ -10,11 +10,13 @@ public class InputController : MonoBehaviour {
 	public Vector3Notification 	OnInputDone; 			//Notificacion de input de movimiento recibido
 	public Notification 		OnInputFinished; 		//Notificacion de input de terminado
 	public Notification 		OnJumpPressed;			//Notificacion de salto
-	public Notification 		OnReturnToGround;		//Notificacion de volver al suelo
+	public Notification 		OnShotPressed;			//Notificacion de disparo
 
+	[Header ("Player One")]
 	public KeyCode 				moveRightKey;			//Tecla para moverse a la derecha
 	public KeyCode 				moveLeftKey;			//Tecla para moverse a la izquierda
 	public KeyCode 				jumpKey;				//Tecla para saltar
+	public KeyCode				shotKey;
 
 	private bool 				isRightArrowPressed;	//Esta apretada la tecla derecha?
 	private bool 				isLeftArrowPressed;		//Esta apretada la tecla izquierda?
@@ -24,7 +26,7 @@ public class InputController : MonoBehaviour {
 		OnInputDone 	= new Vector3Notification (NotificationTypes.oninputdone, Vector3.zero);
 		OnInputFinished = new Notification (NotificationTypes.oninputfinished);
 		OnJumpPressed 	= new Notification (NotificationTypes.onjumppressed);
-		OnReturnToGround = new Notification (NotificationTypes.onreturntoground);
+		OnShotPressed 	= new Notification (NotificationTypes.onshotpressed);
 	}
 	
 
@@ -85,9 +87,10 @@ public class InputController : MonoBehaviour {
 			}
 		}
 
-		if((Input.GetKeyDown(KeyCode.Q))){
+		//Apretamos el boton de disparo
+		if((Input.GetKeyDown(shotKey))){
 
-			//Debug.Log ("SHOOT");
+			NotificationCenter.defaultCenter.postNotification (OnShotPressed);
 		}
 
 	}

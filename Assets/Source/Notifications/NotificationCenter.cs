@@ -9,6 +9,9 @@ public enum NotificationTypes {
 	oninputfinished,		//Se ha terminado un input
 	onjumppressed,			//Se aprieta el salto
 	onreturntoground,		//Se aprieta la tecla de volver al suelo
+	onshotpressed,
+
+	onlevelfinished,
 
 	TotalNotifications
 };

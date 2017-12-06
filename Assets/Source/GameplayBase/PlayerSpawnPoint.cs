@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnPoint : MonoBehaviour {
+public class PlayerSpawnPoint : MonoBehaviour {
 
 	public int 			numOfCharacters;
 	public GameObject 	character;
