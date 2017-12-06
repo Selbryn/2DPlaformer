@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class AimingSystem : MonoBehaviour { 
 
-	public 	float		peedholeDistance;			
+	public 	float		peedholeDistance;	//Distancia minima de la mirilla 		
+	public  float		weaponDistance;
 
-	public 	Transform 	aimTestSprite;
-	public	Transform 	player;	
+	public 	Transform 	peepHolePrefab;		//La mirilla
+	public 	Transform 	weaponPrefab;		//El arma
+	public	Transform 	player;			//El jugador
 
-	private Camera 		mainCam;
+	public	Vector2		shootingVector;	//El vector de disparo actual
 
-	// Use this for initialization
+	private Camera 		mainCam;		//La camara principal
+
 	void Awake () {
 
 		mainCam = Camera.main;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 
 		PaintPeehole ();
@@ -36,11 +38,14 @@ public class AimingSystem : MonoBehaviour {
 		//Si la magnitud del peephole es mayor que la magnitud de la distancia normalizada 
 		if ((peepholeNewPosition - player.position).magnitude > ((peepholeNewPosition - player.position).normalized * peedholeDistance).magnitude) {
 
-			aimTestSprite.position = peepholeNewPosition;
+			peepHolePrefab.position = peepholeNewPosition;
 		} else {
 
-			aimTestSprite.position = player.position + (peepholeNormPosition * peedholeDistance);
+			peepHolePrefab.position = player.position + (peepholeNormPosition * peedholeDistance);
 		}
-			
+
+		weaponPrefab.position = player.position + (peepholeNormPosition * weaponDistance);
+
+		shootingVector = peepholeNormPosition;
 	}
 }

@@ -15,7 +15,6 @@ public class HorizontalMovingPlatform : MonoBehaviour {
 	private bool 	isGoingLeft;
 
 	public 	GameObject 	player;
-	public	float 		increment;
 
 	void Awake(){
 		
@@ -36,7 +35,6 @@ public class HorizontalMovingPlatform : MonoBehaviour {
 
 	void Update () {
 
-		//platformDisplacement = Vector2.zero;
 		if (isGoingLeft) {
 
 			platformDisplacement = new Vector2 (-speed * Time.deltaTime, 0.0f);
@@ -77,6 +75,7 @@ public class HorizontalMovingPlatform : MonoBehaviour {
 			//Si el que le toca le toca por encima
 			if(collisionTransform.position.y >= this.transform.position.y){
 
+				//Lo añadimos como hijo y lo trackeamos
 				player = other.gameObject;
 				player.transform.SetParent (this.transform);
 			}

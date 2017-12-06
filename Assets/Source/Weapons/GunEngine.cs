@@ -2,24 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent (typeof(AimingSystem))]
 public class GunEngine : MonoBehaviour {
 
-	public float 	timeToRecharge;			//Tiempo para recargar una carga
-	public int 		maxNumOfCharges;		//Numero de cargas maximo que puede soportar el arma
-	public bool		isFullCharged;
-		
-	public 	float	currentTime;
-	private float	lastStageTime;			//Momento en el que se consiguio el ultimo stage
-	public 	int 	currentNumOfCharges;
+	[Space (10.0f)]
+	public		Transform	proyectilePrefab;
 
-			
+	[Space (10.0f)]
+	public 		float	timeToRecharge;			//Tiempo para recargar una carga
+	public 		int 	maxNumOfCharges;		//Numero de cargas maximo que puede soportar el arma
+	public 		bool	isFullCharged;
 
-	void Start () {
+	[Space (10.0f)]
+	public		int 	currentNumOfCharges;	//El numero actual de cargas
+	protected	float	currentTime;			//El tiempo actual que ha pasado despues de la ultima recarga
+	protected 	float	lastStageTime;			//Momento en el que se consiguio el ultimo stage
+	protected	AimingSystem	aimingSystem;
+
+	protected virtual void Awake(){
+
+		aimingSystem = GetComponent<AimingSystem> ();
+	}
+
+	protected virtual void Start () {
 
 		currentNumOfCharges = 0;
+		NotificationCenter.defaultCenter.addListener (OnShotPressed, NotificationTypes.onshotpressed);
 	}
 	
-	void Update () {
+	protected virtual void Update () {
 
 		//Si no tenemos todos las cargas acumuladas seguimos contando el tiempo
 		if (currentNumOfCharges < maxNumOfCharges) {
@@ -43,27 +54,30 @@ public class GunEngine : MonoBehaviour {
 			lastStageTime = Time.time;
 			currentTime = 0.0f;
 		}
-
-		if(Input.GetMouseButtonDown(0)){
-
-			UseCharge (1);
-		}
 	}
 
-	protected void UseCharge(int numOfCharges){
+	protected virtual void UseCharge(int numOfCharges){
 
+		//Si el numero de cargas actuales es 0
 		if(currentNumOfCharges == 0){
 
 			return;
 		}
 
-		if(currentNumOfCharges >= numOfCharges){
+		//No gasta cargas
+		if(numOfCharges == 0){
 
-			Debug.Log("Shot");
+			Debug.LogWarning ("Revisar cargas de este arma");
+		}
+
+		//Si tenemos más cargas de las que se gastan
+		if(currentNumOfCharges >= numOfCharges){
+		
 			currentNumOfCharges -= numOfCharges;
 			isFullCharged = false;
 		}
 
 	}
 
+	protected virtual void OnShotPressed(Notification note){ }
 }
