@@ -4,21 +4,9 @@ using UnityEngine;
 
 public class PlayerSpawnPoint : MonoBehaviour {
 
-	public int 			numOfCharacters;
-	public GameObject 	character;
+	public GameObject SpawnPlayer(GameObject player) {
 
-	void Start() {
-
-		SpawnPlayer (true);
-	}
-
-	private void SpawnPlayer(bool isFirstTime) {
-
-		for(int i = 0; i < numOfCharacters; i++){
-
-			Instantiate (character, transform.position, Quaternion.identity);
-		}
-
+		return Instantiate (player, transform.position, Quaternion.identity);
 	}
 
 }

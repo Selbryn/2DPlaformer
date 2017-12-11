@@ -11,7 +11,9 @@ public enum NotificationTypes {
 	onreturntoground,		//Se aprieta la tecla de volver al suelo
 	onshotpressed,
 
+	//Level
 	onlevelfinished,
+	onplayerdie,
 
 	TotalNotifications
 };

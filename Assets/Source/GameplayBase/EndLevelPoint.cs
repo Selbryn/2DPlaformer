@@ -18,5 +18,4 @@ public class EndLevelPoint : MonoBehaviour {
 			NotificationCenter.defaultCenter.postNotification (OnLevelFinished);
 		}
 	}
-
 }
