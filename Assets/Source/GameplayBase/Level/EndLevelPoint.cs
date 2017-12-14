@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class EndLevelPoint : MonoBehaviour {
 
-	public Notification OnLevelFinished;	//Notificacion de finalizar nivel
+	public Notification OnRoomFinished;	//Notificacion de finalizar nivel
 
 	void Awake(){
 
-		OnLevelFinished = new Notification (NotificationTypes.onlevelfinished);
+		OnRoomFinished = new Notification (NotificationTypes.onroomfinished);
 	}
 
 	void OnTriggerEnter2D(Collider2D other){
 
 		if(other.gameObject.tag.ToString() == "Player"){
 
-			NotificationCenter.defaultCenter.postNotification (OnLevelFinished);
+			NotificationCenter.defaultCenter.postNotification (OnRoomFinished);
 		}
 	}
-
 }
