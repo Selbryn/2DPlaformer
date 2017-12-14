@@ -12,7 +12,7 @@ public enum NotificationTypes {
 	onshotpressed,
 
 	//Level
-	onlevelfinished,
+	onroomfinished,
 	onplayerdie,
 
 	TotalNotifications
