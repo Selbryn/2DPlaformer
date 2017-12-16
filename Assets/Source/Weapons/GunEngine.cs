@@ -56,27 +56,31 @@ public class GunEngine : MonoBehaviour {
 		}
 	}
 
-	protected virtual void UseCharge(int numOfCharges){
+	protected virtual bool CanUseCharge(int numOfCharges){
 
 		//Si el numero de cargas actuales es 0
 		if(currentNumOfCharges == 0){
 
-			return;
+			return false;
 		}
 
 		//No gasta cargas
 		if(numOfCharges == 0){
 
 			Debug.LogWarning ("Revisar cargas de este arma");
+			return false;
 		}
 
 		//Si tenemos más cargas de las que se gastan
-		if(currentNumOfCharges >= numOfCharges){
+		if (currentNumOfCharges >= numOfCharges) {
 		
 			currentNumOfCharges -= numOfCharges;
 			isFullCharged = false;
-		}
+			return true;
+		} else {
 
+			return false;
+		}
 	}
 
 	protected virtual void OnShotPressed(Notification note){ }

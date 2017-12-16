@@ -24,8 +24,11 @@ public class BasicGun : GunEngine {
 
 	protected override void OnShotPressed(Notification note){
 
-		UseCharge (chargedUsedPerShot);
-		LaunchProyectile ();
+		//Si el arma tiene suficientes cargas como para disparar dispara
+		if (CanUseCharge (chargedUsedPerShot)) {
+
+			LaunchProyectile ();
+		}
 	}
 
 	public void LaunchProyectile(){
