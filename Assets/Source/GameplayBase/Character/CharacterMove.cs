@@ -220,7 +220,9 @@ public class CharacterMove : MonoBehaviour {
 			}
 		} else {
 
-			Debug.Log ("No direction");
+#if DEBUG
+			Debug.Log ("No direction, el personaje no se puede mover");
+#endif
 			yield break;
 		}
 

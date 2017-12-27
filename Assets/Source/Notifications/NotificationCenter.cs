@@ -13,7 +13,11 @@ public enum NotificationTypes {
 
 	//Level
 	onroomfinished,
-	onplayerdie,
+	onlevelfinished,
+
+	//Player
+	onrecievedamage,		//El jugador recibe daño
+	onplayerdie,			//El jugador muere
 
 	TotalNotifications
 };

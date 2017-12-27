@@ -12,7 +12,7 @@ public class InputController : MonoBehaviour {
 	public Notification 		OnJumpPressed;			//Notificacion de salto
 	public Notification 		OnShotPressed;			//Notificacion de disparo
 
-	[Header ("Player One")]
+	[Header ("Player One keys")]
 	public KeyCode 				moveRightKey;			//Tecla para moverse a la derecha
 	public KeyCode 				moveLeftKey;			//Tecla para moverse a la izquierda
 	public KeyCode 				jumpKey;				//Tecla para saltar

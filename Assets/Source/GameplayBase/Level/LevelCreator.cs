@@ -16,33 +16,25 @@ public class LevelCreator : MonoBehaviour {
 	private bool 		isLevelCreated;		//Se ha creado el nivel?
 
 	void Awake () {
-	
+
 		isLevelCreated = false;
-		BuildRooms ();
-	}
-
-	/// <summary>
-	/// Te dice si el nivel se ha creado o no
-	/// </summary>
-	public bool IsLevelCreated{
-
-		get{
-			return isLevelCreated;
-		}
 	}
 
 	/// <summary>
 	/// Contruimos las habitaciones
 	/// </summary>
-	private void BuildRooms(){
+	public void BuildRooms(){
 
+		//Resizeamos el array
 		System.Array.Resize (ref levelRooms, numOfRooms);
+		//Posicion inicial de la primera habitacion
 		Vector3 nextRoomPosition = Vector3.zero;
 
 #if DEBUG
 		Debug.Log("Init build time:" + Time.time);
 #endif
 
+		//Creamos tantas habitaciones como este indicado
 		for(int i = 0; i < numOfRooms; i++){
 
 			nextRoomPosition = new Vector3 (nextRoomPosition.x + (i * availableRooms.roomWidth), nextRoomPosition.y, nextRoomPosition.z);
@@ -55,5 +47,15 @@ public class LevelCreator : MonoBehaviour {
 #if DEBUG 
 		Debug.Log("End build time:" + Time.time);
 #endif
+	}
+
+	/// <summary>
+	/// Te dice si el nivel se ha creado o no
+	/// </summary>
+	public bool IsLevelCreated{
+
+		get{
+			return isLevelCreated;
+		}
 	}
 }
