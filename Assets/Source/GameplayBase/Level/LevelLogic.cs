@@ -5,12 +5,15 @@ using UnityEngine;
 public class LevelLogic : MonoBehaviour {
 
 	[Space (10.0f)]
-	public 	float	elapsedTime;	//Tiempo que ha transcurrido mientras el nivel esta abierto
-	private float	startingTime;	//Momento en el que comienza el nivel
-	private	bool	isTimeRunning;	//Esta el tiempo corriendo?
+	public 	float	levelElapsedTime;	//Tiempo que ha transcurrido mientras el nivel esta abierto
+	private float	startingTime;		//Momento en el que comienza el nivel
 
 	[Space (10.0f)]
-	public 	int		currentNumberRoom;
+	public 	int		currentNumberRoom;		//La habitacion actual activa
+	[Range (0,5)]
+	public 	int 	maxLevelIterations;		//El numero máximo de iteraciones que tiene este nivel
+	public 	int 	currentLevelIteration;	//El numero de iteracion del nivel
+
 
 	[Space (10.0f)]
 	[Range (1, 2)]
@@ -21,16 +24,23 @@ public class LevelLogic : MonoBehaviour {
 	private LevelCreator levelCreator;	//El componente encargado de crear el nivel
 	private Camera		 mainCamera;	//La camara principal
 
+	private Notification OnFinishLevel;
+
 	public void Awake(){
 
 		levelCreator = GetComponent<LevelCreator> ();
 		mainCamera = Camera.main;
+
 		currentNumberRoom = 0;
+		currentLevelIteration = 0;
+
+		OnFinishLevel = new Notification (NotificationTypes.onlevelfinished);
+		NotificationCenter.defaultCenter.addListener (OnRoomFinished, NotificationTypes.onroomfinished);
 	}
 
 	public IEnumerator Start () {
 
-		NotificationCenter.defaultCenter.addListener (OnRoomFinished, NotificationTypes.onroomfinished);
+		levelCreator.BuildRooms ();
 
 		while(!levelCreator.IsLevelCreated){
 
@@ -41,19 +51,11 @@ public class LevelLogic : MonoBehaviour {
 		RestartLevel ();
 		SpawnPlayers ();
 	}
-	
-	public void Update () {
 
-		if(isTimeRunning){
+	private void RestartLevel(){
 
-			elapsedTime = (Time.time - startingTime);
-		}
-	}
-
-	public void RestartLevel(){
-
-		isTimeRunning = true;
 		startingTime = Time.time;
+		levelElapsedTime = 0.0f;
 	}
 		
 	private void SpawnPlayers(){
@@ -67,11 +69,17 @@ public class LevelLogic : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Activamos una habitacion en concreto
+	/// </summary>
 	private void EnableRoom(int roomToEnable){
 
 		levelCreator.levelRooms[roomToEnable].gameObject.SetActive (true);
 	}
 
+	/// <summary>
+	/// Desactivamos una habitacion en concreto
+	/// </summary>
 	private void DisableRoom(int roomToDisable){
 
 		levelCreator.levelRooms[roomToDisable].gameObject.SetActive (false);
@@ -79,8 +87,6 @@ public class LevelLogic : MonoBehaviour {
 
 	private void MoveCharacterToNextRoom(){
 
-		DisableRoom (currentNumberRoom - 1);
-		EnableRoom (currentNumberRoom);
 		playersSpawned [0].transform.position = levelCreator.levelRooms [currentNumberRoom].SpawnPoint.transform.position;
 	}
 
@@ -95,13 +101,55 @@ public class LevelLogic : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Se calcula el numero de la siguiente habitacion a activar.
+	/// Se sigue el orden segun esten instanciadas hasta que llega a la ultima
+	/// al llegar a la ultima se vuelve a colocar en la primera a no se que haya hecho el maximo de iteraciones por el nivel.
+	/// </summary>
+	private void CalculateRoomNumber(){
+
+		//Si no hemos llegado al final
+		if (currentNumberRoom < levelCreator.levelRooms.Length - 1) {
+
+			currentNumberRoom++;
+		//Si hemos llegado al final volvemos a la primera y sumamos uno a las iteraciones
+		} else {
+
+			if (currentLevelIteration == maxLevelIterations) {
+
+				NotificationCenter.defaultCenter.postNotification (OnFinishLevel);
+				Debug.Break ();
+			} else {
+
+				currentNumberRoom = 0;
+				currentLevelIteration++;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Calculamos el tiempo invertido en el nivel.
+	/// </summary>
+	private void CalculateLevelTime(){
+
+		levelElapsedTime = (Time.time - startingTime);
+	}
+
+#region Notifications
+
+	/// <summary>
 	/// Evento de terminar una room
+	/// Aqui dentro se desencadena el cambio de habitacion
 	/// </summary>
 	public void OnRoomFinished(Notification note){
 
-		isTimeRunning = false;
-		currentNumberRoom++;
+		DisableRoom (currentNumberRoom);
+		CalculateRoomNumber ();
+		EnableRoom (currentNumberRoom);
 		MoveCharacterToNextRoom ();
 		PlaceCamera ();
+		CalculateLevelTime ();
 	}
+
+#endregion
+
 }
