@@ -15,7 +15,9 @@ public class LevelCreator : MonoBehaviour {
 
 	private bool 		isLevelCreated;		//Se ha creado el nivel?
 
-	void Awake () {
+#region Public Methods 
+
+	public void Awake () {
 
 		isLevelCreated = false;
 	}
@@ -58,4 +60,7 @@ public class LevelCreator : MonoBehaviour {
 			return isLevelCreated;
 		}
 	}
+
+#endregion
+
 }

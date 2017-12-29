@@ -24,7 +24,9 @@ public class LevelLogic : MonoBehaviour {
 	private LevelCreator levelCreator;	//El componente encargado de crear el nivel
 	private Camera		 mainCamera;	//La camara principal
 
-	private Notification OnFinishLevel;
+	private Notification OnFinishLevel;	//Notificacion de terminar el nivel
+
+#region Public Methods 
 
 	public void Awake(){
 
@@ -47,10 +49,14 @@ public class LevelLogic : MonoBehaviour {
 			yield return new WaitForEndOfFrame();
 		}
 
-		EnableRoom (currentNumberRoom);
+		EnableRoom ();
 		RestartLevel ();
 		SpawnPlayers ();
 	}
+
+#endregion
+
+#region Private Methods 
 
 	private void RestartLevel(){
 
@@ -72,19 +78,22 @@ public class LevelLogic : MonoBehaviour {
 	/// <summary>
 	/// Activamos una habitacion en concreto
 	/// </summary>
-	private void EnableRoom(int roomToEnable){
+	private void EnableRoom(){
 
-		levelCreator.levelRooms[roomToEnable].gameObject.SetActive (true);
+		levelCreator.levelRooms [currentNumberRoom].EnableRoomIteration (currentLevelIteration);
 	}
 
 	/// <summary>
 	/// Desactivamos una habitacion en concreto
 	/// </summary>
-	private void DisableRoom(int roomToDisable){
+	private void DisableRoom(){
 
-		levelCreator.levelRooms[roomToDisable].gameObject.SetActive (false);
+		levelCreator.levelRooms [currentNumberRoom].DisableRoomIteration (currentLevelIteration);
 	}
 
+	/// <summary>
+	/// Movemos al pj hasta la siguiente habitacion
+	/// </summary>
 	private void MoveCharacterToNextRoom(){
 
 		playersSpawned [0].transform.position = levelCreator.levelRooms [currentNumberRoom].SpawnPoint.transform.position;
@@ -134,6 +143,8 @@ public class LevelLogic : MonoBehaviour {
 		levelElapsedTime = (Time.time - startingTime);
 	}
 
+#endregion
+
 #region Notifications
 
 	/// <summary>
@@ -142,9 +153,9 @@ public class LevelLogic : MonoBehaviour {
 	/// </summary>
 	public void OnRoomFinished(Notification note){
 
-		DisableRoom (currentNumberRoom);
+		DisableRoom ();
 		CalculateRoomNumber ();
-		EnableRoom (currentNumberRoom);
+		EnableRoom ();
 		MoveCharacterToNextRoom ();
 		PlaceCamera ();
 		CalculateLevelTime ();

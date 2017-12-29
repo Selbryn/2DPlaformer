@@ -17,7 +17,7 @@ public class GunEngine : MonoBehaviour {
 	public		int 	currentNumOfCharges;	//El numero actual de cargas
 	protected	float	currentTime;			//El tiempo actual que ha pasado despues de la ultima recarga
 	protected 	float	lastStageTime;			//Momento en el que se consiguio el ultimo stage
-	protected	AimingSystem	aimingSystem;
+	protected	AimingSystem	aimingSystem;	//Refrencia al sistema de apuntado
 
 	protected virtual void Awake(){
 

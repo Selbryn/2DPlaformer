@@ -22,6 +22,15 @@ public class BasicGun : GunEngine {
 		base.Update ();
 	}
 
+
+	public void LaunchProyectile(){
+
+		Rigidbody2D newProyectile = Instantiate<Transform> (proyectilePrefab, aimingSystem.weaponPrefab.position, Quaternion.identity).GetComponent<Rigidbody2D>();
+		newProyectile.AddForce (aimingSystem.shootingVector * proyectileForce);
+	}
+
+#region Notificaciones
+
 	protected override void OnShotPressed(Notification note){
 
 		//Si el arma tiene suficientes cargas como para disparar dispara
@@ -31,9 +40,6 @@ public class BasicGun : GunEngine {
 		}
 	}
 
-	public void LaunchProyectile(){
+#endregion
 
-		Rigidbody2D newProyectile = Instantiate<Transform> (proyectilePrefab, aimingSystem.weaponPrefab.position, Quaternion.identity).GetComponent<Rigidbody2D>();
-		newProyectile.AddForce (aimingSystem.shootingVector * proyectileForce);
-	}
 }
