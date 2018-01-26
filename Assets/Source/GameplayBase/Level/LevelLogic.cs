@@ -21,10 +21,11 @@ public class LevelLogic : MonoBehaviour {
 	public 	GameObject 		playerPrefab;	//El prefab del personaje
 	public	GameObject[]	playersSpawned;	//Los jugadores spawneados
 
-	private LevelCreator levelCreator;	//El componente encargado de crear el nivel
-	private Camera		 mainCamera;	//La camara principal
+	private LevelCreator levelCreator;		//El componente encargado de crear el nivel
+	private Camera		 mainCamera;		//La camara principal
 
-	private Notification OnFinishLevel;	//Notificacion de terminar el nivel
+	private Notification OnFinishLevel;		//Notificacion de terminar el nivel
+	private Notification OnPlayerSpawned;	//Notificacion de spawnear player
 
 #region Public Methods 
 
@@ -37,21 +38,14 @@ public class LevelLogic : MonoBehaviour {
 		currentLevelIteration = 0;
 
 		OnFinishLevel = new Notification (NotificationTypes.onlevelfinished);
+		OnPlayerSpawned = new Notification (NotificationTypes.onplayerspawned);
 		NotificationCenter.defaultCenter.addListener (OnRoomFinished, NotificationTypes.onroomfinished);
+		NotificationCenter.defaultCenter.addListener (OnLevelCreated, NotificationTypes.onlevelcreated);
 	}
 
-	public IEnumerator Start () {
+	public void Start () {
 
 		levelCreator.BuildRooms ();
-
-		while(!levelCreator.IsLevelCreated){
-
-			yield return new WaitForEndOfFrame();
-		}
-
-		EnableRoom ();
-		RestartLevel ();
-		SpawnPlayers ();
 	}
 
 #endregion
@@ -73,6 +67,8 @@ public class LevelLogic : MonoBehaviour {
 
 			playersSpawned[i] = Instantiate (playerPrefab, nextSpawnPointPos, Quaternion.identity);
 		}
+
+		NotificationCenter.defaultCenter.postNotification (OnPlayerSpawned);
 	}
 
 	/// <summary>
@@ -151,7 +147,7 @@ public class LevelLogic : MonoBehaviour {
 	/// Evento de terminar una room
 	/// Aqui dentro se desencadena el cambio de habitacion
 	/// </summary>
-	public void OnRoomFinished(Notification note){
+	private void OnRoomFinished(Notification note){
 
 		DisableRoom ();
 		CalculateRoomNumber ();
@@ -159,6 +155,13 @@ public class LevelLogic : MonoBehaviour {
 		MoveCharacterToNextRoom ();
 		PlaceCamera ();
 		CalculateLevelTime ();
+	}
+
+	private void OnLevelCreated(Notification note){
+
+		EnableRoom ();
+		RestartLevel ();
+		SpawnPlayers ();
 	}
 
 #endregion

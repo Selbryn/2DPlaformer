@@ -37,6 +37,7 @@ public class InputController : MonoBehaviour {
 
 			isLeftArrowPressed = true;
 
+			//Si no estaba pulsada la tecla de la derecha 
 			if(!isRightArrowPressed){
 
 				OnInputDone.varVector3 = Vector3.left;
@@ -92,6 +93,5 @@ public class InputController : MonoBehaviour {
 
 			NotificationCenter.defaultCenter.postNotification (OnShotPressed);
 		}
-
 	}
 }

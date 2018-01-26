@@ -13,13 +13,13 @@ public class LevelCreator : MonoBehaviour {
 	public LevelRoom 	availableRooms;		//Las rooms disponibles para este nivel
 	public LevelRoom[]	levelRooms;			//Convertir en un array mas adelante
 
-	private bool 		isLevelCreated;		//Se ha creado el nivel?
+	private Notification OnLevelCreated;	//Notificacion de crear nivel
 
 #region Public Methods 
 
 	public void Awake () {
 
-		isLevelCreated = false;
+		OnLevelCreated = new Notification (NotificationTypes.onlevelcreated);
 	}
 
 	/// <summary>
@@ -32,10 +32,6 @@ public class LevelCreator : MonoBehaviour {
 		//Posicion inicial de la primera habitacion
 		Vector3 nextRoomPosition = Vector3.zero;
 
-#if DEBUG
-		Debug.Log("Init build time:" + Time.time);
-#endif
-
 		//Creamos tantas habitaciones como este indicado
 		for(int i = 0; i < numOfRooms; i++){
 
@@ -43,22 +39,8 @@ public class LevelCreator : MonoBehaviour {
 			levelRooms[i] = Instantiate<LevelRoom> (availableRooms, nextRoomPosition, Quaternion.identity);
 			levelRooms[i].name = "Room_" + i;
 		}
-
-		isLevelCreated = true;
-
-#if DEBUG 
-		Debug.Log("End build time:" + Time.time);
-#endif
-	}
-
-	/// <summary>
-	/// Te dice si el nivel se ha creado o no
-	/// </summary>
-	public bool IsLevelCreated{
-
-		get{
-			return isLevelCreated;
-		}
+			
+		NotificationCenter.defaultCenter.postNotification (OnLevelCreated); 
 	}
 
 #endregion

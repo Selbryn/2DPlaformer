@@ -22,7 +22,9 @@ public class BasicGun : GunEngine {
 		base.Update ();
 	}
 
-
+	/// <summary>
+	//Lanzamos el proyectil 
+	/// </summary>
 	public void LaunchProyectile(){
 
 		Rigidbody2D newProyectile = Instantiate<Transform> (proyectilePrefab, aimingSystem.weaponPrefab.position, Quaternion.identity).GetComponent<Rigidbody2D>();

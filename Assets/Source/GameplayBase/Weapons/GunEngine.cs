@@ -26,7 +26,7 @@ public class GunEngine : MonoBehaviour {
 
 	protected virtual void Start () {
 
-		currentNumOfCharges = 0;
+		currentNumOfCharges = maxNumOfCharges;
 		NotificationCenter.defaultCenter.addListener (OnShotPressed, NotificationTypes.onshotpressed);
 	}
 	

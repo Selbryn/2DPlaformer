@@ -12,8 +12,12 @@ public enum NotificationTypes {
 	onshotpressed,
 
 	//Level
-	onroomfinished,
-	onlevelfinished,
+	onroomfinished,			//Se llama cuando se ha completado una habitacion
+	onlevelfinished,		//Se llama cuando se ha terminado el nivel
+
+	//Initializing
+	onlevelcreated,			//Se llama cuando se ha creado el nivel
+	onplayerspawned,	
 
 	//Player
 	onrecievedamage,		//El jugador recibe daño
