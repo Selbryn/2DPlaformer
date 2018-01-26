@@ -9,11 +9,11 @@ public class AimingSystem : MonoBehaviour {
 
 	public 	Transform 	peepHolePrefab;		//La mirilla
 	public 	Transform 	weaponPrefab;		//El arma
-	public	Transform 	player;			//El jugador
+	public	Transform 	player;				//El jugador
 
-	public	Vector2		shootingVector;	//El vector de disparo actual
+	public	Vector2		shootingVector;		//El vector de disparo actual
 
-	private Camera 		mainCam;		//La camara principal
+	private Camera 		mainCam;			//La camara principal
 
 	void Awake () {
 
@@ -22,10 +22,10 @@ public class AimingSystem : MonoBehaviour {
 	
 	void Update () {
 
-		PaintPeehole ();
+		KeyboardPeephole ();
 	}
 
-	private void PaintPeehole(){
+	private void KeyboardPeephole(){
 		
 		Vector3 mouseVectorPosition = mainCam.ScreenToWorldPoint (Input.mousePosition);
 		Vector3 peepholeNewPosition = new Vector3(mouseVectorPosition.x, mouseVectorPosition.y, 0.0f);
@@ -35,6 +35,7 @@ public class AimingSystem : MonoBehaviour {
 		Debug.DrawLine (player.position, peepholeNewPosition, Color.green);
 		Debug.DrawRay (player.position, (peepholeNewPosition - player.position).normalized * peedholeDistance, Color.red);
 #endif
+
 		//Si la magnitud del peephole es mayor que la magnitud de la distancia normalizada 
 		if ((peepholeNewPosition - player.position).magnitude > ((peepholeNewPosition - player.position).normalized * peedholeDistance).magnitude) {
 

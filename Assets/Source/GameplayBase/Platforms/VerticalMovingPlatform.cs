@@ -8,11 +8,11 @@ public class VerticalMovingPlatform : MonoBehaviour {
 	public float	distanceToMove;
 	public Vector2 	platformDisplacement;
 
-	public float	endPoint;
-	public float	initPoint;
+	private float	endPoint;
+	private float	initPoint;
 
 	public bool 	startGoingDown;
-	public bool 	isGoingDown;
+	private bool 	isGoingDown;
 
 	public 	GameObject 	player;
 
